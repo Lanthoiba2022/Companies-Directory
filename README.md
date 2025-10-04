@@ -63,7 +63,7 @@ src/
 
 2. **Install dependencies**
    ```bash
-   npm install --legacy-peer-deps
+   npm install 
    ```
 
 3. **Start the development server**
@@ -185,23 +185,3 @@ The application includes:
 - **Linting**: ESLint configuration for code quality
 - **Error Boundaries**: Graceful error handling
 - **Loading States**: User feedback during data operations
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📞 Support
-
-For support or questions, please open an issue in the repository.
-
----
-
-Built with ❤️ using React, TypeScript, and Tailwind CSS# Companies-Directory
