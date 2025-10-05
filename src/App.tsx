@@ -116,28 +116,28 @@ function App() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <div className="text-sm font-medium text-muted-foreground mb-1">
+          <div className="grid grid-cols-3 gap-2 md:gap-4">
+            <div className="bg-card rounded-lg p-3 md:p-6 shadow-sm border">
+              <div className="text-xs md:text-sm font-medium text-muted-foreground mb-1">
                 Total Companies
               </div>
-              <div className="text-3xl font-bold text-foreground">
+              <div className="text-xl md:text-3xl font-bold text-foreground">
                 {filteredCompanies.length}
               </div>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <div className="text-sm font-medium text-muted-foreground mb-1">
+            <div className="bg-card rounded-lg p-3 md:p-6 shadow-sm border">
+              <div className="text-xs md:text-sm font-medium text-muted-foreground mb-1">
                 Industries
               </div>
-              <div className="text-3xl font-bold text-foreground">
+              <div className="text-xl md:text-3xl font-bold text-foreground">
                 {new Set(filteredCompanies.map((c) => c.industry)).size}
               </div>
             </div>
-            <div className="bg-card rounded-lg p-6 shadow-sm border">
-              <div className="text-sm font-medium text-muted-foreground mb-1">
+            <div className="bg-card rounded-lg p-3 md:p-6 shadow-sm border">
+              <div className="text-xs md:text-sm font-medium text-muted-foreground mb-1">
                 Locations
               </div>
-              <div className="text-3xl font-bold text-foreground">
+              <div className="text-xl md:text-3xl font-bold text-foreground">
                 {new Set(filteredCompanies.map((c) => c.location)).size}
               </div>
             </div>
