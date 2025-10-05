@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface CompanyPaginationProps {
   currentPage: number;
@@ -66,72 +67,83 @@ export function CompanyPagination({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <span>
-          Showing {startItem} to {endItem} of {totalItems} results
-        </span>
-        <span className="hidden sm:inline">|</span>
-        <div className="flex items-center gap-2">
-          <span className="hidden sm:inline">Rows per page:</span>
-          <Select
-            value={pageSize.toString()}
-            onValueChange={(value) => onPageSizeChange(Number(value))}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5">5</SelectItem>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-            </SelectContent>
-          </Select>
+    <div className="relative px-2 py-2">
+      {/* Results and Rows per page - Single horizontal line */}
+        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+          <span className="whitespace-nowrap">
+            Showing {startItem} to {endItem} of {totalItems} results
+          </span>
+          <div className="h-4 w-px bg-border"></div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm">Rows per page:</span>
+            <Select
+              value={pageSize.toString()}
+              onValueChange={(value) => onPageSizeChange(Number(value))}
+            >
+              <SelectTrigger className="h-8 w-[70px] text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </div>
 
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-              className={
-                currentPage === 1
-                  ? "pointer-events-none opacity-50"
-                  : "cursor-pointer"
-              }
-            />
-          </PaginationItem>
-
-          {getPageNumbers().map((page, index) => (
-            <PaginationItem key={index}>
-              {typeof page === "number" ? (
-                <PaginationLink
-                  onClick={() => onPageChange(page)}
-                  isActive={currentPage === page}
-                  className="cursor-pointer"
-                >
-                  {page}
-                </PaginationLink>
-              ) : (
-                <PaginationEllipsis />
-              )}
+      {/* Pagination Controls - Centered */}
+      <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+                className={cn(
+                  "h-8 px-3 text-sm",
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer hover:bg-muted"
+                )}
+              />
             </PaginationItem>
-          ))}
 
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-              className={
-                currentPage === totalPages
-                  ? "pointer-events-none opacity-50"
-                  : "cursor-pointer"
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            {getPageNumbers().map((page, index) => (
+              <PaginationItem key={index}>
+                {typeof page === "number" ? (
+                  <PaginationLink
+                    onClick={() => onPageChange(page)}
+                    isActive={currentPage === page}
+                    className={cn(
+                      "h-8 w-8 text-sm cursor-pointer",
+                      currentPage === page
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
+                        : "hover:bg-muted"
+                    )}
+                  >
+                    {page}
+                  </PaginationLink>
+                ) : (
+                  <PaginationEllipsis className="h-8 w-8 text-sm" />
+                )}
+              </PaginationItem>
+            ))}
+
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+                className={cn(
+                  "h-8 px-3 text-sm",
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer hover:bg-muted"
+                )}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 }
