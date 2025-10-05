@@ -18,8 +18,7 @@ function App() {
     setSelectedIndustry,
     selectedLocation,
     setSelectedLocation,
-    filteredCompanies,
-    resetFilters
+    filteredCompanies
   } = useCompanyFilters({ companies });
 
   const {
