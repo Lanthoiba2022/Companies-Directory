@@ -334,9 +334,6 @@ Subtle text, backgrounds
 
 ### 📝 **Adding New Companies**
 
-<details>
-<summary>📋 How to add companies to the database</summary>
-
 Edit `data/db.json` to add new companies:
 
 ```json
