@@ -1,42 +1,36 @@
-import { useState, useMemo } from "react";
-import { Building2, TrendingUp } from "lucide-react";
+import { Building2, TrendingUp, AlertCircle, RefreshCw } from "lucide-react";
 import { CompanyTable } from "@/components/CompanyTable";
 import { CompanyFilters } from "@/components/CompanyFilters";
 import { CompanyPagination } from "@/components/CompanyPagination";
-import { mockCompanies, industries, locations } from "@/data/mockCompanies";
+import { useCompanies } from "@/hooks/useCompanies";
+import { useCompanyFilters } from "@/hooks/useCompanyFilters";
+import { usePagination } from "@/hooks/usePagination";
+import { Button } from "@/components/ui/button";
 import "./App.css";
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedIndustry, setSelectedIndustry] = useState("All Industries");
-  const [selectedLocation, setSelectedLocation] = useState("All Locations");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [isLoading] = useState(false);
+  const { companies, industries, locations, isLoading, error, refetch } = useCompanies();
+  
+  const {
+    searchTerm,
+    setSearchTerm,
+    selectedIndustry,
+    setSelectedIndustry,
+    selectedLocation,
+    setSelectedLocation,
+    filteredCompanies,
+    resetFilters
+  } = useCompanyFilters({ companies });
 
-  // Filter companies
-  const filteredCompanies = useMemo(() => {
-    return mockCompanies.filter((company) => {
-      const matchesSearch = company.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesIndustry =
-        selectedIndustry === "All Industries" ||
-        company.industry === selectedIndustry;
-      const matchesLocation =
-        selectedLocation === "All Locations" ||
-        company.location === selectedLocation;
-
-      return matchesSearch && matchesIndustry && matchesLocation;
-    });
-  }, [searchTerm, selectedIndustry, selectedLocation]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredCompanies.length / pageSize);
-  const paginatedCompanies = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return filteredCompanies.slice(startIndex, startIndex + pageSize);
-  }, [filteredCompanies, currentPage, pageSize]);
+  const {
+    currentPage,
+    setCurrentPage,
+    pageSize,
+    setPageSize,
+    totalPages,
+    paginatedCompanies,
+    totalItems
+  } = usePagination({ companies: filteredCompanies });
 
   // Reset to page 1 when filters change
   const handleFilterChange = () => {
@@ -58,10 +52,22 @@ function App() {
     handleFilterChange();
   };
 
-  const handlePageSizeChange = (size: number) => {
-    setPageSize(size);
-    setCurrentPage(1);
-  };
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <AlertCircle className="h-16 w-16 text-destructive mx-auto" />
+          <h2 className="text-2xl font-bold text-foreground">Failed to load companies</h2>
+          <p className="text-muted-foreground">{error}</p>
+          <Button onClick={refetch} className="gap-2">
+            <RefreshCw className="h-4 w-4" />
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,7 +84,7 @@ function App() {
                   Company Directory
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Explore {mockCompanies.length} leading companies
+                  {isLoading ? "Loading companies..." : `Explore ${companies.length} leading companies`}
                 </p>
               </div>
             </a>
@@ -148,8 +154,8 @@ function App() {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 pageSize={pageSize}
-                onPageSizeChange={handlePageSizeChange}
-                totalItems={filteredCompanies.length}
+                onPageSizeChange={setPageSize}
+                totalItems={totalItems}
               />
             </div>
           )}
@@ -158,7 +164,7 @@ function App() {
 
       {/* Footer */}
       <footer className="border-t bg-card/50 mt-12">
-        <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
+        <div className="container mx-auto px-4 py-6 text-center text-xs text-muted-foreground">
           Company Directory © 2025 • Built with React & TypeScript
         </div>
       </footer>

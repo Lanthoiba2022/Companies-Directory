@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Company } from "@/data/mockCompanies";
+import type { Company } from "@/services/api";
 import { ArrowUpDown, ExternalLink, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-type SortField = "name" | "industry" | "location" | "employees" | "founded";
+type SortField = "name" | "industry" | "location" | "employees" | "founded" | "revenue";
 type SortOrder = "asc" | "desc";
 
 interface CompanyTableProps {
@@ -36,7 +36,15 @@ export function CompanyTable({ companies, isLoading }: CompanyTableProps) {
     let aValue = a[sortField];
     let bValue = b[sortField];
 
-    if (typeof aValue === "string") {
+    if (sortField === "revenue") {
+      // Extract numeric values from revenue strings like "$15B - $20B"
+      const extractRevenue = (revenue: string) => {
+        const match = revenue.match(/\$(\d+(?:\.\d+)?)B/);
+        return match ? parseFloat(match[1]) : 0;
+      };
+      aValue = extractRevenue(aValue as string);
+      bValue = extractRevenue(bValue as string);
+    } else if (typeof aValue === "string") {
       aValue = aValue.toLowerCase();
       bValue = (bValue as string).toLowerCase();
     }
@@ -78,58 +86,69 @@ export function CompanyTable({ companies, isLoading }: CompanyTableProps) {
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/50">
-            <TableHead className="w-[250px]">
+            <TableHead className="w-[250px] text-center">
               <Button
                 variant="ghost"
                 onClick={() => handleSort("name")}
-                className="h-auto p-0 hover:bg-transparent font-semibold"
+                className="h-auto p-0 hover:bg-transparent font-semibold w-full justify-center"
               >
                 Company Name
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TableHead>
-            <TableHead>
+            <TableHead className="text-center">
               <Button
                 variant="ghost"
                 onClick={() => handleSort("industry")}
-                className="h-auto p-0 hover:bg-transparent font-semibold"
+                className="h-auto p-0 hover:bg-transparent font-semibold w-full justify-center"
               >
                 Industry
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TableHead>
-            <TableHead>
+            <TableHead className="text-center">
               <Button
                 variant="ghost"
                 onClick={() => handleSort("location")}
-                className="h-auto p-0 hover:bg-transparent font-semibold"
+                className="h-auto p-0 hover:bg-transparent font-semibold w-full justify-center"
               >
                 Location
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TableHead>
-            <TableHead className="text-right">
+            <TableHead className="text-center">
               <Button
                 variant="ghost"
                 onClick={() => handleSort("employees")}
-                className="h-auto p-0 hover:bg-transparent font-semibold ml-auto"
+                className="h-auto p-0 hover:bg-transparent font-semibold w-full justify-center"
               >
                 Employees
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TableHead>
-            <TableHead className="text-right">
+            <TableHead className="text-center">
               <Button
                 variant="ghost"
                 onClick={() => handleSort("founded")}
-                className="h-auto p-0 hover:bg-transparent font-semibold ml-auto"
+                className="h-auto p-0 hover:bg-transparent font-semibold w-full justify-center"
               >
                 Founded
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TableHead>
-            <TableHead>Revenue</TableHead>
-            <TableHead className="text-right">Website</TableHead>
+            <TableHead className="text-center">
+              <Button
+                variant="ghost"
+                onClick={() => handleSort("revenue")}
+                className="h-auto p-0 hover:bg-transparent font-semibold w-full justify-center"
+              >
+                Revenue
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            </TableHead>
+            <TableHead className="text-center">
+              <span className="font-semibold">Website</span>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -138,34 +157,34 @@ export function CompanyTable({ companies, isLoading }: CompanyTableProps) {
               key={company.id}
               className="hover:bg-muted/30 transition-colors"
             >
-              <TableCell className="font-medium">
-                <div>
-                  <div className="font-semibold text-foreground">
+              <TableCell className="text-center">
+                <div className="flex flex-col items-center space-y-1">
+                  <div className="font-semibold text-foreground text-center">
                     {company.name}
                   </div>
-                  <div className="text-sm text-muted-foreground line-clamp-1">
+                  <div className="text-sm text-muted-foreground line-clamp-1 text-center max-w-[200px]">
                     {company.description}
                   </div>
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell className="text-center">
                 <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-primary/10 text-primary">
                   {company.industry}
                 </span>
               </TableCell>
-              <TableCell className="text-muted-foreground">
+              <TableCell className="text-center text-muted-foreground">
                 {company.location}
               </TableCell>
-              <TableCell className="text-right font-medium">
+              <TableCell className="text-center font-medium">
                 {company.employees.toLocaleString()}
               </TableCell>
-              <TableCell className="text-right text-muted-foreground">
+              <TableCell className="text-center text-muted-foreground">
                 {company.founded}
               </TableCell>
-              <TableCell className="text-muted-foreground">
+              <TableCell className="text-center text-muted-foreground">
                 {company.revenue}
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-center">
                 <a
                   href={`https://${company.website}`}
                   target="_blank"
