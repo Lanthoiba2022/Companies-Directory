@@ -149,9 +149,6 @@ companiesdirectory/
 
 ### Installation
 
-<details>
-<summary>📋 Step-by-step installation</summary>
-
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
@@ -170,8 +167,6 @@ companiesdirectory/
 
 4. **Open your browser**
    Navigate to `http://localhost:5173` to view the application.
-
-</details>
 
 ### 🛠️ Available Scripts
 
@@ -236,16 +231,11 @@ companiesdirectory/
 
 ### 📄 **Pagination Controls**
 
-<details>
-<summary>📋 Pagination Features</summary>
-
 - **Page Size Options**: 5, 10, 25, or 50 items per page
 - **Navigation**: Previous/Next buttons with page numbers
 - **Page Info**: Current page and total pages display
 - **Jump to Page**: Direct navigation to specific pages
 - **Results Count**: Total filtered results shown
-
-</details>
 
 ## 🎨 Design System
 
@@ -366,15 +356,10 @@ Edit `data/db.json` to add new companies:
 
 ### 🔧 **Adding New Filters**
 
-<details>
-<summary>📋 Extending filter functionality</summary>
-
 1. **Add filter options** to the data arrays in hooks
 2. **Update filter logic** in `useCompanyFilters.ts`
 3. **Add UI controls** in `CompanyFilters.tsx`
 4. **Update types** in TypeScript interfaces
-
-</details>
 
 ## ⚡ Performance Optimizations
 
